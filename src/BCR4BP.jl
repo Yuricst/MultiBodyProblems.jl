@@ -5,7 +5,7 @@
 
 Struct for BCR4BP system.
 """
-mutable struct BCR4BP
+mutable struct BCR4BP <: MultiBodyProblem
     μ::Float64
     μ_s::Float64
     a_s::Float64

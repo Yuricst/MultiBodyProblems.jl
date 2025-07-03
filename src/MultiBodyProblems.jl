@@ -6,6 +6,8 @@ using LinearAlgebra
 using OrdinaryDiffEq
 using Printf
 
+abstract type MultiBodyProblem end
+
 include("utils.jl")
 include("CR3BP.jl")
 include("BCR4BP.jl")

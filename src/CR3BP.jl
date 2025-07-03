@@ -5,7 +5,7 @@
 
 Struct for CR3BP system.
 """
-mutable struct CR3BP
+mutable struct CR3BP <: MultiBodyProblem
     μ::Float64
     μ1::Float64
     μ2::Float64
