@@ -46,6 +46,11 @@ function Base.show(io::IO, cr3bp::CR3BP)
 end
 
 
+"""
+    eom_cr3bp!(dx, x, μ, t)
+
+EOM for CR3BP system compatible with `DifferentialEquations.jl` in mutating form.
+"""
 function eom_cr3bp!(dx, x, μ, t)
     # calcualte intermediate scalar quantities
     r1 = sqrt((x[1] + μ)^2 + x[2]^2 + x[3]^2)
@@ -61,6 +66,11 @@ function eom_cr3bp!(dx, x, μ, t)
 end
 
 
+"""
+    dfdx_cr3bp(x, μ, t)
+
+Compute Jacobian of CR3BP EOM.
+"""
 function dfdx_cr3bp(x, μ, t)
     A = zeros(6,6)
     A[1:3,4:6] = I(3)
@@ -73,6 +83,12 @@ function dfdx_cr3bp(x, μ, t)
 end
 
 
+"""
+    eom_stm_cr3bp!(dx_stm, x_stm, μ, t)
+
+EOM for CR3BP system with STM compatible with `DifferentialEquations.jl` in mutating form.
+The state `x_stm` consists of the Cartesian r, v vectors & STM flattened in row-major order.
+"""
 function eom_stm_cr3bp!(dx_stm, x_stm, μ, t)
     # calcualte intermediate scalar quantities
     r1 = sqrt((x_stm[1] + μ)^2 + x_stm[2]^2 + x_stm[3]^2)
@@ -91,6 +107,11 @@ function eom_stm_cr3bp!(dx_stm, x_stm, μ, t)
 end
 
 
+"""
+    eom!(dx, x, p::CR3BP, t)
+
+EOM for CR3BP system compatible with `DifferentialEquations.jl` in mutating form.
+"""
 function eom!(dx, x, p::CR3BP, t)
     # calcualte intermediate scalar quantities
     r1 = sqrt((x[1] + p.μ)^2 + x[2]^2 + x[3]^2)
@@ -105,6 +126,11 @@ function eom!(dx, x, p::CR3BP, t)
 end
 
 
+"""
+    dfdx(x, p::CR3BP, t)
+
+Compute Jacobian of CR3BP EOM.
+"""
 function dfdx(x, p::CR3BP, t)
     A = zeros(6,6)
     A[1:3,4:6] = I(3)
@@ -117,6 +143,12 @@ function dfdx(x, p::CR3BP, t)
 end
 
 
+"""
+    eom_stm!(dx_stm, x_stm, p::CR3BP, t)
+
+EOM for CR3BP system with STM compatible with `DifferentialEquations.jl` in mutating form.
+The state `x_stm` consists of the Cartesian r, v vectors & STM flattened in row-major order.
+"""
 function eom_stm!(dx_stm, x_stm, p::CR3BP, t)
     # calcualte intermediate scalar quantities
     r1 = sqrt((x_stm[1] + p.μ)^2 + x_stm[2]^2 + x_stm[3]^2)
