@@ -52,7 +52,7 @@ function eom_cr3bp!(dx, x, μ, t)
     r2 = sqrt((x[1] - 1 + μ)^2 + x[2]^2 + x[3]^2)
     μ1_r13 = (1 - μ) / r1^3
     μ2_r23 = μ / r2^3
-    # derivatives
+    # derivatives of state
     dx[1:3] = x[4:6]
     dx[4] =  2*x[5] + x[1] - μ1_r13*(x[1] + μ) - μ2_r23*(x[1] - 1 + μ)
     dx[5] = -2*x[4] + x[2] - μ1_r13*x[2]       - μ2_r23*x[2]
@@ -61,13 +61,33 @@ function eom_cr3bp!(dx, x, μ, t)
 end
 
 
-function dfdx_cr3bp(x, p, t)
-    throw(NotImplementedError("Not implemented"))
+function dfdx_cr3bp(x, μ, t)
+    A = zeros(6,6)
+    A[1:3,4:6] = I(3)
+    A[4,5] = 2.0
+    A[5,4] = -2.0
+    G1 = gravity_gradient_matrix(1-μ, [x[1] + μ, x[2], x[3]])
+    G2 = gravity_gradient_matrix(μ, [x[1] - 1 + μ, x[2], x[3]])
+    A[4:6,1:3] = [1 0 0; 0 1 0; 0 0 0] + G1 + G2
+    return A
 end
 
 
-function eom_stm_cr3bp!(dx_stm, x_stm, p, t)
-    throw(NotImplementedError("Not implemented"))
+function eom_stm_cr3bp!(dx_stm, x_stm, μ, t)
+    # calcualte intermediate scalar quantities
+    r1 = sqrt((x_stm[1] + μ)^2 + x_stm[2]^2 + x_stm[3]^2)
+    r2 = sqrt((x_stm[1] - 1 + μ)^2 + x_stm[2]^2 + x_stm[3]^2)
+    μ1_r13 = (1 - μ) / r1^3
+    μ2_r23 = μ / r2^3
+    # derivatives of state
+    dx_stm[1:3] = x_stm[4:6]
+    dx_stm[4] =  2*x_stm[5] + x_stm[1] - μ1_r13*(x_stm[1] + μ) - μ2_r23*(x_stm[1] - 1 + μ)
+    dx_stm[5] = -2*x_stm[4] + x_stm[2] - μ1_r13*x_stm[2]       - μ2_r23*x_stm[2]
+    dx_stm[6] =                        - μ1_r13*x_stm[3]       - μ2_r23*x_stm[3]
+    # derivatives of STM
+    A = dfdx_cr3bp(x_stm[1:6], μ, t)
+    dx_stm[7:42] = reshape((A * reshape(x_stm[7:42],6,6)')', 36)
+    return nothing
 end
 
 
@@ -85,6 +105,31 @@ function eom!(dx, x, p::CR3BP, t)
 end
 
 
+function dfdx(x, p::CR3BP, t)
+    A = zeros(6,6)
+    A[1:3,4:6] = I(3)
+    A[4,5] = 2.0
+    A[5,4] = -2.0
+    G1 = gravity_gradient_matrix(1-p.μ, [x[1] + p.μ, x[2], x[3]])
+    G2 = gravity_gradient_matrix(p.μ, [x[1] - 1 + p.μ, x[2], x[3]])
+    A[4:6,1:3] = [1 0 0; 0 1 0; 0 0 0] + G1 + G2
+    return A
+end
+
+
 function eom_stm!(dx_stm, x_stm, p::CR3BP, t)
-    throw(NotImplementedError("Not implemented"))
+    # calcualte intermediate scalar quantities
+    r1 = sqrt((x_stm[1] + p.μ)^2 + x_stm[2]^2 + x_stm[3]^2)
+    r2 = sqrt((x_stm[1] - 1 + p.μ)^2 + x_stm[2]^2 + x_stm[3]^2)
+    μ1_r13 = (1 - p.μ) / r1^3
+    μ2_r23 = p.μ / r2^3
+    # derivatives of state
+    dx_stm[1:3] = x_stm[4:6]
+    dx_stm[4] =  2*x_stm[5] + x_stm[1] - μ1_r13*(x_stm[1] + p.μ) - μ2_r23*(x_stm[1] - 1 + p.μ)
+    dx_stm[5] = -2*x_stm[4] + x_stm[2] - μ1_r13*x_stm[2]         - μ2_r23*x_stm[2]
+    dx_stm[6] =                        - μ1_r13*x_stm[3]         - μ2_r23*x_stm[3]
+    # derivatives of STM
+    A = dfdx(x_stm[1:6], p, t)
+    dx_stm[7:42] = reshape((A * reshape(x_stm[7:42],6,6)')', 36)
+    return nothing
 end

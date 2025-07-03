@@ -1,8 +1,10 @@
 module MultiBodyProblems
 
+using LinearAlgebra
 using OrdinaryDiffEq
 using Printf
 
+include("utils.jl")
 include("CR3BP.jl")
 
 export CR3BP
