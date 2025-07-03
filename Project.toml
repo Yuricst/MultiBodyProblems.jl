@@ -1,0 +1,4 @@
+name = "MultiBodyProblems.jl"
+uuid = "3d21a790-bb18-4977-91df-7bfe91aabd0f"
+authors = ["Yuricst"]
+version = "0.1.0"
