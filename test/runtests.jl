@@ -12,4 +12,5 @@ end
 @testset "LPOs" begin
     include("test_jpl_lpo.jl")
     include("test_periodic_orbit.jl")
+    include("test_single_shooting.jl")
 end

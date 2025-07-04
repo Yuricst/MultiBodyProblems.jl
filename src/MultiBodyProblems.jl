@@ -13,7 +13,7 @@ include("CR3BP.jl")
 include("BCR4BP.jl")
 include("periodic_orbit.jl")
 include("invariant_manifold.jl")
-
+include("shooting_single.jl")
 
 export CR3BP
 export eom_cr3bp!, dfdx_cr3bp, eom_stm_cr3bp!
@@ -24,5 +24,6 @@ export eom_bcr4bp!, dfdx_bcr4bp, eom_stm_bcr4bp!
 export eom!, eom_stm!   # generic eom function names accepting systems (e.g. CR3BP, BCR4BP) as parameters
 
 export PeriodicOrbit, eigenspace, get_invariant_manifold
+export single_shooting_xzplane
 
 end # module MultiBodyProblems
