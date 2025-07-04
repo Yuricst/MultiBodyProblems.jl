@@ -34,8 +34,8 @@ function test_bcr4bp_eom()
     
     xf_test = [0.3810885520047902, -0.49442795718815136, 0.046195317004687514,
               -1.445010410675033, 0.8597808943242603, 0.03253211976324759]
-    @test maximum(abs.(xf_test - sol.u[end][1:6])) < 1e-14
-    @test maximum(abs.(xf_test - sol_2.u[end][1:6])) < 1e-14
+    @test maximum(abs.(xf_test - sol.u[end][1:6])) < 1e-9     # low tolerance needed for github actions
+    @test maximum(abs.(xf_test - sol_2.u[end][1:6])) < 1e-9   # low tolerance needed for github actions
 
     # # figure
     # fig = Figure(size=(600,600))
